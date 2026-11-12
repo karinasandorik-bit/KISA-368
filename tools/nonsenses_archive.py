@@ -28,7 +28,7 @@ for n in range(110):
   urls=[]
   for el in [node]+node.find_all(True):
    style=el.get("style","")
-   urls += re.findall(r"url\\(['\\\"]?(https?[^)\\'\\\"]+)",style)
+   if "url(" in style: urls.append(style.split("url(",1)[1].split(")",1)[0].strip("\'\" "))
    for attr in ["src","poster","data-src"]:
     v=el.get(attr,"")
     if v.startswith("//"):v="https:"+v
