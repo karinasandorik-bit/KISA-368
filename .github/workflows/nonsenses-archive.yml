@@ -1,0 +1,29 @@
+name: NONSenses public archive
+on:
+  push:
+    paths:
+      - ".github/workflows/nonsenses-archive.yml"
+      - "tools/nonsenses_archive.py"
+  workflow_dispatch:
+jobs:
+  archive:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install dependencies
+        run: pip install requests beautifulsoup4
+      - name: Download public archive
+        run: python tools/nonsenses_archive.py 2>&1 | tee archive-log.txt
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: NONSenses-public-archive
+          path: |
+            NONSenses_public_archive.zip
+            NONSenses/
+            archive-log.txt
+          retention-days: 30
