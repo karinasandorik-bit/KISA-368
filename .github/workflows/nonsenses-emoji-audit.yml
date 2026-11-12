@@ -1,0 +1,24 @@
+name: NONSenses emoji audit
+on:
+  push:
+    paths:
+      - ".github/workflows/nonsenses-emoji-audit.yml"
+      - "tools/nonsenses_emoji_audit.py"
+  workflow_dispatch:
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install requests beautifulsoup4
+      - run: python tools/nonsenses_emoji_audit.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: NONSenses-emoji-metadata
+          path: emoji_audit/
+          retention-days: 30
